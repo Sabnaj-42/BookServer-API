@@ -24,22 +24,21 @@ type Credentials struct { //Login credentials
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
-
 type AuthorDB map[string]Author
 type BookDB map[string]Book
 type CredentialDB map[string]string
 
-var bookList BookDB
-var credentialList CredentialDB
+var BookList BookDB
+var CredentialList CredentialDB
 var authorList AuthorDB
 
 func Init() { //initializing data for book server
 
-	credentialList = make(CredentialDB)
-	bookList = make(BookDB)
+	CredentialList = make(CredentialDB)
+	BookList = make(BookDB)
 
-	credentialList["sabnaj"] = "1234"
-	credentialList["Admin"] = "5678"
+	CredentialList["sabnaj"] = "1234"
+	CredentialList["Admin"] = "5678"
 
 	author1 := Author{
 		Name: "Sadia Sornaly",
@@ -67,8 +66,8 @@ func Init() { //initializing data for book server
 	//authorList[author1.Name] = author1
 	//authorList[author2.Name] = author2
 
-	bookList[book1.ISBN] = book1
-	bookList[book2.ISBN] = book2
+	BookList[book1.ISBN] = book1
+	BookList[book2.ISBN] = book2
 
 }
 

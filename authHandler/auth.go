@@ -3,8 +3,8 @@ package authHandler
 import (
 	"encoding/json"
 	"fmt"
-	//
-	"github.com/Sabnaj-42/BookServer-API/Book-Api/dataHandler"
+
+	dh "github.com/Sabnaj-42/BookServer-API/dataHandler"
 	"github.com/lestrrat-go/jwx/v2/jwa"
 	"github.com/lestrrat-go/jwx/v2/jwt"
 	"io/ioutil"
@@ -15,7 +15,7 @@ import (
 var Secret = []byte("this_is_my_secret_key")
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	var cred Credentials
+	var cred dh.Credentials
 
 	err := json.NewDecoder(r.Body).Decode(&cred)
 
@@ -24,7 +24,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	password, ok := credentialList[cred.Username]
+	password, ok := dh.CredentialList[cred.Username]
 	if !ok {
 		http.Error(w, "User not found", http.StatusNotFound)
 		return
@@ -80,7 +80,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user Credentials
+	var user dh.Credentials
 	// Unmarshal JSON into the User struct
 	err = json.Unmarshal(body, &user)
 	if err != nil {
@@ -89,13 +89,13 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check if user already exists
-	if _, exists := credentialList[user.Username]; exists {
+	if _, exists := dh.CredentialList[user.Username]; exists {
 		http.Error(w, "User already exists", http.StatusConflict)
 		return
 	}
 
 	// Add user to the map
-	credentialList[user.Username] = user.Password
+	dh.CredentialList[user.Username] = user.Password
 	w.WriteHeader(http.StatusCreated)
 	fmt.Fprintf(w, "User %s registered successfully", user.Username)
 }

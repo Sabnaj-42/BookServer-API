@@ -1,12 +1,14 @@
 package apiHandler
 
 import (
+	"encoding/json"
+	dh "github.com/Sabnaj-42/BookServer-API/dataHandler"
 	"github.com/go-chi/chi/v5"
 	"net/http"
 )
 
 func AddNewBook(w http.ResponseWriter, r *http.Request) {
-	var book Book
+	var book dh.Book
 	err := json.NewDecoder(r.Body).Decode(&book)
 	if err != nil {
 		http.Error(w, "Cannot decode data", http.StatusBadRequest)
@@ -17,13 +19,13 @@ func AddNewBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, exists := bookList[book.ISBN]
+	_, exists := dh.BookList[book.ISBN]
 	if exists {
 		http.Error(w, "Book already exists", http.StatusConflict)
 		return
 	}
 
-	bookList[book.ISBN] = book
+	dh.BookList[book.ISBN] = book
 	w.WriteHeader(http.StatusCreated)
 
 }
@@ -36,12 +38,12 @@ func deleteBook(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid ISBN", http.StatusBadRequest)
 		return
 	}
-	_, exists := bookList[ISBN]
+	_, exists := dh.BookList[ISBN]
 	if !exists {
 		http.Error(w, "Book does not exist", http.StatusNotFound)
 		return
 	}
-	delete(bookList, ISBN)
+	delete(dh.BookList, ISBN)
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -52,20 +54,20 @@ func updateBook(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid ISBN", http.StatusBadRequest)
 		return
 	}
-	_, exists := bookList[ISBN]
+	_, exists := dh.BookList[ISBN]
 	if !exists {
 		http.Error(w, "Book does not exist", http.StatusNotFound)
 		return
 	}
 
-	var newBook Book
+	var newBook dh.Book
 	err := json.NewDecoder(r.Body).Decode(&newBook)
 	if err != nil {
 		http.Error(w, "Cannot decode data", http.StatusBadRequest)
 		return
 	}
 
-	bookList[ISBN] = newBook
+	dh.BookList[ISBN] = newBook
 	_, err = w.Write([]byte("Book updated successfully"))
 	if err != nil {
 		http.Error(w, "Can not write data", http.StatusInternalServerError)

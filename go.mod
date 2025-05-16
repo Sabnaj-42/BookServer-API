@@ -1,4 +1,4 @@
-module github.com/Sabnaj-42/BookServer
+module github.com/Sabnaj-42/BookServer-API
 
 go 1.24.2
 
