@@ -115,7 +115,7 @@ func RunServer(port int) {
 	//unprotected
 	r.Get("/getBooks", getAllBooks) //request for getBooks: curl http://localhost:8080/getBooks
 
-	if err := http.ListenAndServe("127.0.0.1:8080", r); err != nil {
+	if err := http.ListenAndServe(":8080", r); err != nil {
 		log.Fatalln(err)
 	}
 }
